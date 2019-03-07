@@ -1,0 +1,64 @@
+﻿
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Accelerometer Javascript Test</title>
+    <meta name="viewport" content="width=device-width,user-scalable=yes" />
+    <style>
+        body {
+            font-family: helvetica, arial, sans serif;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content">
+        <ul>
+            <li>alpha (z): <span id="alpha"></span>g</li>
+            <li>beta (x): <span id="beta"></span>g</li>
+            <li>gamma (y): <span id="gamma"></span>g</li>
+        </ul>
+        <button id="center">Reset Center!</button>
+    </div>
+    <script src="/lib/jquery/dist/jquery.js"></script>
+    <script src="/js/signalr.js"></script>
+    <script src="/js/realtime.js"></script>
+    <script type="text/javascript">
+
+var lastOrientation, centerOrientation;
+
+function recenter() {
+    centerOrientation = lastOrientation;
+}
+
+if (window.DeviceOrientationEvent != undefined) {
+    window.ondeviceorientation = (e) => {
+        function toRadians(angle) {
+            return angle * Math.PI / 180;
+        }
+
+        if (!centerOrientation) {
+            centerOrientation = e;
+        }
+
+        lastOrientation = e;
+
+        document.getElementById("alpha").innerHTML = e.alpha;
+        document.getElementById("beta").innerHTML = e.beta;
+        document.getElementById("gamma").innerHTML = e.gamma;
+
+        rotate(
+            toRadians(e.beta - centerOrientation.beta),
+            toRadians(e.gamma - centerOrientation.gamma),
+            toRadians(e.alpha - centerOrientation.alpha));
+    }
+}
+
+document.getElementById("center").onclick = () => {
+    centerOrientation = lastOrientation;
+};
+
+    </script>
+
+</body>
+</html>
