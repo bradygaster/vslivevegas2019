@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
@@ -13,27 +14,27 @@ namespace RealTimeCloud.Hubs
             _logger = logger;
         }
 
-        public async void LockAxis(string axis)
+        public async Task LockAxis(string axis)
         {
             _logger.LogInformation("LockAxis", axis);
-            await Clients.Others.SendCoreAsync("controlLocked", new [] { axis });
+            await Clients.Others.SendAsync("controlLocked", axis);
         }
 
-        public async void UnlockAxis(string axis)
+        public async Task UnlockAxis(string axis)
         {
             _logger.LogInformation("UnlockAxis", axis);
-            await Clients.Others.SendCoreAsync("controlUnlocked", new object[] { axis });
+            await Clients.Others.SendAsync("controlUnlocked", axis);
         }
 
-        public async void RotateOnAxis(string axis, string value)
+        public async Task RotateOnAxis(string axis, string value)
         {
             _logger.LogInformation("RotateOnAxis", axis);
-            await Clients.Others.SendCoreAsync("rotated", new object[] { axis, value });
+            await Clients.Others.SendAsync("rotated", axis, value);
         }
 
-        public async void Rotate(double x, double y, double z)
+        public async Task Rotate(double x, double y, double z)
         {
-            await Clients.Others.SendCoreAsync("fullyrotated", new object[] { x, y, z });
+            await Clients.Others.SendAsync("fullyrotated", x, y, z );
         }
     }
 }
